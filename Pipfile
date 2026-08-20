@@ -14,6 +14,7 @@ importlib-metadata = "*"
 importlib-resources = "*"
 ipdb = "*"
 marshmallow = "*"
+faker = "*"
 
 [dev-packages]
 
