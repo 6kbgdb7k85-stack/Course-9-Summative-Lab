@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+flask = "*"
+requests = "*"
+flask-migrate = "*"
+flask-sqlalchemy = "*"
+werkzeug = "*"
+importlib-metadata = "*"
+importlib-resources = "*"
+ipdb = "*"
+marshmallow = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
