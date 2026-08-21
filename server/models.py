@@ -19,6 +19,14 @@ class Exercise(db.Model):
         db.CheckConstraint('name or category', name="req_name_or_category"),
     )
 
+class ExerciseSchema(Schema):
+    id = fields.Int()
+    name = fields.String()
+    category = fields.String()
+    equipment_needed = fields.Bool()
+    workouts = fields.List(fields.Nested(lambda: WorkoutSchema(exclude=("exercises",))))
+    workout_exercises = fields.List(fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout","exercise"))))
+
 class Workout(db.Model):
     __tablename__ = "workouts"
 
@@ -29,6 +37,14 @@ class Workout(db.Model):
 
     workout_exercises = db.relationship("WorkoutExercise", back_populates="workout")
     exercises = association_proxy("workout_exercises", "exercise", creator=lambda exercise_obj: Exercise(exercise=exercise_obj))
+
+class WorkoutSchema(Schema):
+    id = fields.Int()
+    date = fields.Date()
+    duration_minutes = fields.Int()
+    notes = fields.String()
+    exercises = fields.List(fields.Nested(lambda: ExerciseSchema(exclude=("workouts",))))
+    workout_exercises = fields.List(fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout","exercise"))))
 
 class WorkoutExercise(db.Model):
     __tablename__ = "workout_exercises"
@@ -46,3 +62,11 @@ class WorkoutExercise(db.Model):
     __tableargs__ = (
         db.CheckConstraint('reps or sets', name="req_reps_or_sets")
     )
+
+class WorkoutExerciseSchema(Schema):
+    id = fields.Int()
+    reps = fields.Int()
+    sets = fields.Int()
+    duration_seconds = fields.Int()
+    workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercise", "exercises")))
+    exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercise", "workouts")))
