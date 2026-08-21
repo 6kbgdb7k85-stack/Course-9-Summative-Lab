@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
 db = SQLAlchemy()
 
 class Exercise(db.Model):
@@ -27,6 +27,10 @@ class ExerciseSchema(Schema):
     workouts = fields.List(fields.Nested(lambda: WorkoutSchema(exclude=("exercises",))))
     workout_exercises = fields.List(fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout","exercise"))))
 
+    @post_load
+    def make_Exercise(self, data, **kwargs):
+        return Exercise(**data)
+
 class Workout(db.Model):
     __tablename__ = "workouts"
 
@@ -45,6 +49,10 @@ class WorkoutSchema(Schema):
     notes = fields.String()
     exercises = fields.List(fields.Nested(lambda: ExerciseSchema(exclude=("workouts",))))
     workout_exercises = fields.List(fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout","exercise"))))
+
+    @post_load
+    def make_workout(self, data, **kwargs):
+        return Workout(**data)
 
 class WorkoutExercise(db.Model):
     __tablename__ = "workout_exercises"
@@ -68,5 +76,9 @@ class WorkoutExerciseSchema(Schema):
     reps = fields.Int()
     sets = fields.Int()
     duration_seconds = fields.Int()
-    workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercise", "exercises")))
-    exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercise", "workouts")))
+    workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises", "exercises")))
+    exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises", "workouts")))
+
+    @post_load
+    def make_exercise_workout(self, data, **kwargs):
+        return WorkoutExercise(**data)
