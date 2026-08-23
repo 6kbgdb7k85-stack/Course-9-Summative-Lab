@@ -120,7 +120,7 @@ def add_exercise_to_workout(workout_id, exercise_id):
         response_body = WorkoutExerciseSchema().dump(new_workout_exercise)
         status = 201
     except:
-        response_body = {"error":"internal server error"}
+        response_body = {"error":"Internal server error"}
         status = 500
     return make_response(response_body, status)
 
