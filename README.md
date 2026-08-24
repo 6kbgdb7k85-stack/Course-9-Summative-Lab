@@ -5,10 +5,11 @@ Flask SQLAlchemy Workout Application Backend
 
 ## Setup
 - clone repo
-- run pipenv install+
+- run pipenv install
 - within pipenv environment (either through pipenv shell or pipenv run *command*) run the following
     - export FLASK_APP=app.py
     - export FLASK_RUN_PORT=5555
+    - flask db upgrade head
 
 ## Usage
 - navigate to server directory
