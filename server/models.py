@@ -15,6 +15,7 @@ class Exercise(db.Model):
     workout_exercises = db.relationship("WorkoutExercise", back_populates="exercise", cascade="all, delete-orphan")
     workouts = association_proxy("workout_exercises", "workout", creator=lambda workout_obj: Workout(workout=workout_obj))
 
+    #only requiring one of name and category allows the user to be as vague or specific as desired with the exercises
     __table_args__ = (
         db.CheckConstraint("NOT (name IS NULL AND category IS NULL)", name="req_name_or_category"),
     )
@@ -66,6 +67,11 @@ class WorkoutSchema(Schema):
         if data.get("duration_minutes") and data.get("duration_minutes") < 0:
             raise ValidationError("Duration must be greater than 0")
 
+    @validates_schema
+    def validate_date_present(self, data, **kwargs):
+        if not data.get("date"):
+            raise ValidationError("Date is required")
+
     @post_load
     def make_workout(self, data, **kwargs):
         return Workout(**data)
@@ -89,6 +95,7 @@ class WorkoutExercise(db.Model):
             raise ValueError("duration_seconds cannot be negative")
         return duration_seconds
 
+    #not all workouts necessarily have reps and sets, so only one is required
     __table_args__ = (
         db.CheckConstraint(reps.is_not(None) | sets.is_not(None), name="req_reps_or_sets"),
     )
