@@ -6,14 +6,15 @@ Flask SQLAlchemy Workout Application Backend
 ## Setup
 - clone repo
 - run pipenv install
-- within pipenv environment (either through pipenv shell or pipenv run *command*) run the following
+- run pipenv shell
+- navigate to directory /server and run the following
     - export FLASK_APP=app.py
     - export FLASK_RUN_PORT=5555
     - flask db upgrade head
 
 ## Usage
 - navigate to server directory
-- within pipenv environment run python seed.py to seed the database with random data
+- within pipenv environment (either through pipenv shell or pipenv run *command*) run python seed.py to seed the database with random data
     - data will be formatted like real entries, but will be nonsensical as workout and exercise data
 - within pipenv environment run python app.py
 - within pipenv environment run flask shell
