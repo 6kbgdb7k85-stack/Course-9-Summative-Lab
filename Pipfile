@@ -15,6 +15,7 @@ importlib-resources = "*"
 ipdb = "*"
 marshmallow = "*"
 faker = "*"
+gunicorn = "*"
 
 [dev-packages]
 
